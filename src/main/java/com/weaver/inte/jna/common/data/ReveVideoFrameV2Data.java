@@ -1,9 +1,10 @@
 package com.weaver.inte.jna.common.data;
 
 import com.sun.jna.Structure;
-import com.sun.jna.Union;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.LongByReference;
+
+import java.nio.ByteBuffer;
 
 
 /**
@@ -12,7 +13,7 @@ import com.sun.jna.ptr.LongByReference;
  * @description
  * @date:21/11/26 16:11
  */
-public class VideoFrameV2Data extends Structure {
+public class ReveVideoFrameV2Data extends Structure {
     public int xres = 0;
     public int yres = 0;
     public IntByReference FourCC;
@@ -26,5 +27,4 @@ public class VideoFrameV2Data extends Structure {
     public int data_size_in_bytes;
     public String p_metadata;
     public long timestamp;
-
 }

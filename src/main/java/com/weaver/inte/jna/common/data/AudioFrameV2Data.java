@@ -18,10 +18,4 @@ public class AudioFrameV2Data extends Structure {
     public int channel_stride_in_bytes;
     public String p_metadata;
     public long timestamp;
-
-    public static class ByReference extends AudioFrameV2Data implements Structure.ByReference {
-    }
-
-    public static class ByValue extends AudioFrameV2Data implements Structure.ByValue {
-    }
 }

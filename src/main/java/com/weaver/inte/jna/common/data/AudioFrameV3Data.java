@@ -18,7 +18,7 @@ public class AudioFrameV3Data extends Structure {
     public int no_samples;
     public long timecode;
     public IntByReference FourCC;
-    public LongByReference p_data;
+    public byte[] p_data = new byte[8];
     public int channel_stride_in_bytes;
     public int data_size_in_bytes;
     public String p_metadata;
