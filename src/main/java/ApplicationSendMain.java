@@ -46,42 +46,40 @@ public class ApplicationSendMain {
                         MetadataFrameData p_metadata = new MetadataFrameData();
                         SendData sendData = new SendData(source.p_ndi_name, "HH", true, true);
                         try (SendLib sendLib = new SendLib(sendData)) {
+                            MetadataFrameData p_metadata2 = new MetadataFrameData();
                             do {
-                                int receiveFrameType = reveiveLib.recvCaptureV2(p_video_data, p_audio_data2, p_metadata, 2000);
+                                int receiveFrameType = reveiveLib.recvCaptureV2(p_video_data, p_audio_data2, p_metadata, 100);
                                 switch (receiveFrameType) {
                                     case 0:
                                         //none
-                                        System.out.println("none");
                                         break;
                                     case 1:
-                                        //video
-                                        System.out.println("reve video:------------------------------");
-                                        System.out.println(p_video_data.p_data);
                                         //send video
+                                        System.out.println("send video:------------------------------");
+                                        System.out.println(p_video_data.p_data);
                                         sendLib.sendVideoV2(p_video_data);
                                         reveiveLib.freeVideoV2(p_video_data);
                                         break;
                                     case 2:
-                                        //audio
-                                        System.out.println("reve audio:------------------------------");
-                                        System.out.println(p_audio_data2.p_data);
                                         //send audio
+                                        System.out.println("send audio:------------------------------");
+                                        System.out.println(p_audio_data2.p_data);
                                         sendLib.sendAudioV2(p_audio_data2);
                                         reveiveLib.freeAudioV2(p_audio_data2);
                                         break;
                                     case 3:
-                                        //meta data
-                                        System.out.println("reve meta:------------------------------");
-                                        System.out.println(p_metadata.p_data);
                                         //send meta
+                                        System.out.println("send meta:------------------------------");
+                                        System.out.println(p_metadata.p_data);
                                         sendLib.sendMetadata(p_metadata);
-                                        //reveiveLib.freeMetadata(p_metadata);
+                                        p_metadata2.p_data = "<ndi_capabilities web_control=\"http://192.168.1.1/6f073725619ddb4fd88bac7ceba569ca70666f590a6f141653cc1a34b6a54bf2\" ntk_ptz=\"true\" ntk_exposure_v2=\"true\" />";
+                                        sendLib.sendAddConnectionMetadata(p_metadata2);
+//                                      reveiveLib.freeMetadata(p_metadata);
                                         break;
                                     case 4:
                                         System.out.println("error");
                                         break;
                                 }
-                                Thread.sleep(1000);
                             } while (true);
                         }
                     } catch (Exception e) {

@@ -43,8 +43,8 @@ public class SendLib implements AutoCloseable {
         instance.NDIlib_send_send_metadata(this.insPoint, p_metadata);
     }
 
-    public IntByReference sendCapture(MetadataFrameData p_metadata,int timeout_in_ms) {
-        return instance.NDIlib_send_capture(this.insPoint, p_metadata,timeout_in_ms);
+    public void sendAddConnectionMetadata(MetadataFrameData p_metadata) {
+        instance.NDIlib_send_add_connection_metadata(this.insPoint, p_metadata);
     }
 
     @Override
@@ -65,6 +65,8 @@ public class SendLib implements AutoCloseable {
 
         void NDIlib_send_send_metadata(long insPoint, MetadataFrameData p_metadata);
 
-        IntByReference NDIlib_send_capture(long insPoint, MetadataFrameData p_metadata,int timeout_in_ms);             // The amount of time in milliseconds to wait for data.
+        IntByReference NDIlib_send_capture(long insPoint, MetadataFrameData p_metadata,int timeout_in_ms);
+
+        void NDIlib_send_add_connection_metadata(long insPoint, MetadataFrameData p_metadata);
     }
 }

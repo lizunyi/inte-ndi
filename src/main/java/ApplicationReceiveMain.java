@@ -37,12 +37,13 @@ public class ApplicationReceiveMain {
                         VideoFrameV2Data p_video_data = new VideoFrameV2Data();
                         AudioFrameV2Data p_audio_data2 = new AudioFrameV2Data();
                         MetadataFrameData p_metadata = new MetadataFrameData();
+                        String url = reveiveLib.recvGetWebControl();
+                        System.out.println(url);
                         do {
-                            int receiveFrameType = reveiveLib.recvCaptureV2(p_video_data, p_audio_data2, p_metadata, 5000);
+                            int receiveFrameType = reveiveLib.recvCaptureV2(p_video_data, p_audio_data2, p_metadata, 100);
                             switch (receiveFrameType) {
                                 case 0:
                                     //none
-                                    System.out.println("none");
                                     break;
                                 case 1:
                                     //video
@@ -66,7 +67,6 @@ public class ApplicationReceiveMain {
                                     System.out.println("error");
                                     break;
                             }
-                            Thread.sleep(1000);
                         } while (true);
                     } catch (Exception e) {
                         e.printStackTrace();
