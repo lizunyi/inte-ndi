@@ -26,9 +26,6 @@ public class ApplicationReceiveMain {
                 return;
             }
             for (NdiSourceData sourceData : sourceDataList) {
-                if (sourceData.p_ndi_name.contains("Integrated Webcam")) {
-//                    continue;
-                }
                 final NdiSourceData source = sourceData;
                 new Thread(() -> {
                     ReceiveData receiveData = new ReceiveData(source, new IntByReference(1), new IntByReference(100), true, "MyNdi");
@@ -49,21 +46,21 @@ public class ApplicationReceiveMain {
                                     break;
                                 case 1:
                                     //video
-                                    System.out.println("video:------------------------------");
+                                    System.out.println("reve video:------------------------------");
                                     System.out.println(p_video_data.p_data);
                                     reveiveLib.freeVideoV2(p_video_data);
                                     break;
                                 case 2:
                                     //audio
-                                    System.out.println("audio:------------------------------");
+                                    System.out.println("reve audio:------------------------------");
                                     System.out.println(p_audio_data2.p_data);
                                     reveiveLib.freeAudioV2(p_audio_data2);
                                     break;
                                 case 3:
                                     //meta data
-                                    System.out.println("meta:------------------------------");
+                                    System.out.println("reve meta:------------------------------");
                                     System.out.println(p_metadata.p_data);
-//                                        reveiveLib.freeMetadata(p_metadata);
+                                    //reveiveLib.freeMetadata(p_metadata);
                                     break;
                                 case 4:
                                     System.out.println("error");

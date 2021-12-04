@@ -33,9 +33,6 @@ public class ApplicationSendMain {
                 return;
             }
             for (NdiSourceData sourceData : sourceDataList) {
-                if (sourceData.p_ndi_name.contains("Integrated Webcam")) {
-                    continue;
-                }
                 final NdiSourceData source = sourceData;
                 new Thread(() -> {
                     ReceiveData receiveData = new ReceiveData(source, new IntByReference(1), new IntByReference(100), true, "MyNdi");
@@ -50,7 +47,7 @@ public class ApplicationSendMain {
                         SendData sendData = new SendData(source.p_ndi_name, "HH", true, true);
                         try (SendLib sendLib = new SendLib(sendData)) {
                             do {
-                                int receiveFrameType = reveiveLib.recvCaptureV2(p_video_data, p_audio_data2, p_metadata, 5000);
+                                int receiveFrameType = reveiveLib.recvCaptureV2(p_video_data, p_audio_data2, p_metadata, 2000);
                                 switch (receiveFrameType) {
                                     case 0:
                                         //none
@@ -58,7 +55,7 @@ public class ApplicationSendMain {
                                         break;
                                     case 1:
                                         //video
-                                        System.out.println("video:------------------------------");
+                                        System.out.println("reve video:------------------------------");
                                         System.out.println(p_video_data.p_data);
                                         //send video
                                         sendLib.sendVideoV2(p_video_data);
@@ -66,7 +63,7 @@ public class ApplicationSendMain {
                                         break;
                                     case 2:
                                         //audio
-                                        System.out.println("audio:------------------------------");
+                                        System.out.println("reve audio:------------------------------");
                                         System.out.println(p_audio_data2.p_data);
                                         //send audio
                                         sendLib.sendAudioV2(p_audio_data2);
@@ -74,7 +71,7 @@ public class ApplicationSendMain {
                                         break;
                                     case 3:
                                         //meta data
-                                        System.out.println("meta:------------------------------");
+                                        System.out.println("reve meta:------------------------------");
                                         System.out.println(p_metadata.p_data);
                                         //send meta
                                         sendLib.sendMetadata(p_metadata);
