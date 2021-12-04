@@ -30,8 +30,8 @@ public class FindLib implements AutoCloseable {
         Set<NdiSourceData> sourceDataList = new HashSet<>();
         long startTills = System.currentTimeMillis();
         System.out.println("find...");
-        for (; System.currentTimeMillis() - startTills < 2000; ) {
-            if (!instance.NDIlib_find_wait_for_sources(this.insPoint, waitTime)) {
+        for (; System.currentTimeMillis() - startTills < waitTime; ) {
+            if (!instance.NDIlib_find_wait_for_sources(this.insPoint, 2000)) {
                 continue;
             }
             IntByReference numSources = new IntByReference();

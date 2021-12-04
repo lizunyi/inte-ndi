@@ -24,35 +24,82 @@ import java.util.List;
 public class ApplicationSendMain {
 
     public static void main(String[] args) throws IOException {
-        FindData findData = new FindData(true, "Memo", "192.168.1.128");
+//        FindData findData = new FindData(true, "Memo", "192.168.1.128");
+        FindData findData = new FindData(true, "", "");
         try (FindLib findLib = new FindLib(findData)) {
             //查找NDI源
-            List<NdiSourceData> sourceDataList = findLib.findCurrentSources(1000);
+            List<NdiSourceData> sourceDataList = findLib.findCurrentSources(5000);
             //调用接收
             if (CollectionUtils.isEmpty(sourceDataList)) {
                 return;
             }
             for (NdiSourceData sourceData : sourceDataList) {
-                SendData sendData = new SendData(sourceData.p_ndi_name, "Memo", true, true);
-                try (SendLib sendLib = new SendLib(sendData)) {
-//                    do {
-//                        try {
-//                            String data = DateUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss");
-//                            System.err.println("send MetadataFrameData：" + data);
-//                            MetadataFrameData p_metadata = new MetadataFrameData(data.length(), System.currentTimeMillis(), data);
-//                            sendLib.sendMetadata(p_metadata);
-//                            Thread.sleep(1000);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    } while (true);
-                    final int pixelDepth = 4;
-                    VideoFrameV2Data p_video_data = new VideoFrameV2Data();
-                    ByteBuffer[] frameBuffers = {
-                        ByteBuffer.allocateDirect(p_video_data.xres * p_video_data.yres * pixelDepth),
-                        ByteBuffer.allocateDirect(p_video_data.xres * p_video_data.yres * pixelDepth)
-                    };
+                if (sourceData.p_ndi_name.contains("Integrated Webcam")) {
+                    continue;
                 }
+                final NdiSourceData source = sourceData;
+                new Thread(() -> {
+                    ReceiveData receiveData = new ReceiveData(source, new IntByReference(1), new IntByReference(100), true, "MyNdi");
+                    try (ReveiveLib reveiveLib = new ReveiveLib(receiveData)) {
+                        reveiveLib.connect(source);
+                        System.out.println("receive ndi_ssource:");
+                        System.out.println(source);
+                        VideoFrameV2Data p_video_data = new VideoFrameV2Data();
+                        AudioFrameV2Data p_audio_data2 = new AudioFrameV2Data();
+                        MetadataFrameData p_metadata = new MetadataFrameData();
+                        long startTills = System.currentTimeMillis();
+                        SendData sendData = new SendData(source.p_ndi_name, "HH", true, true);
+                        try (SendLib sendLib = new SendLib(sendData)) {
+                            do {
+                                int receiveFrameType = reveiveLib.recvCaptureV2(p_video_data, p_audio_data2, p_metadata, 5000);
+                                switch (receiveFrameType) {
+                                    case 0:
+                                        //none
+                                        System.out.println("none");
+                                        break;
+                                    case 1:
+                                        //video
+                                        System.out.println("video:------------------------------");
+                                        System.out.println(p_video_data.p_data);
+                                        reveiveLib.freeVideoV2(p_video_data);
+                                        break;
+                                    case 2:
+                                        //audio
+                                        System.out.println("audio:------------------------------");
+                                        System.out.println(p_audio_data2.p_data);
+                                        reveiveLib.freeAudioV2(p_audio_data2);
+                                        break;
+                                    case 3:
+                                        //meta data
+                                        System.out.println("meta:------------------------------");
+                                        System.out.println(p_metadata.p_data);
+                                        //                                        reveiveLib.freeMetadata(p_metadata);
+                                        break;
+                                    case 4:
+                                        System.out.println("error");
+                                        break;
+                                }
+                                switch (receiveFrameType) {
+                                    case 1:
+                                        //video
+                                        sendLib.sendVideoV2(p_video_data);
+                                        break;
+                                    case 2:
+                                        //audio
+                                        sendLib.sendAudioV2(p_audio_data2);
+                                        break;
+                                    case 3:
+                                        //meta data
+                                        sendLib.sendMetadata(p_metadata);
+                                        break;
+                                }
+                                Thread.sleep(1000);
+                            } while (true);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }).start();
             }
         }
     }
