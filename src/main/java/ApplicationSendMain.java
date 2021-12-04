@@ -29,7 +29,6 @@ public class ApplicationSendMain {
         try (FindLib findLib = new FindLib(findData)) {
             //查找NDI源
             List<NdiSourceData> sourceDataList = findLib.findCurrentSources(5000);
-            //调用接收
             if (CollectionUtils.isEmpty(sourceDataList)) {
                 return;
             }
@@ -40,6 +39,7 @@ public class ApplicationSendMain {
                 final NdiSourceData source = sourceData;
                 new Thread(() -> {
                     ReceiveData receiveData = new ReceiveData(source, new IntByReference(1), new IntByReference(100), true, "MyNdi");
+                    //接收NDI源数据
                     try (ReveiveLib reveiveLib = new ReveiveLib(receiveData)) {
                         reveiveLib.connect(source);
                         System.out.println("receive ndi_ssource:");
@@ -47,7 +47,6 @@ public class ApplicationSendMain {
                         VideoFrameV2Data p_video_data = new VideoFrameV2Data();
                         AudioFrameV2Data p_audio_data2 = new AudioFrameV2Data();
                         MetadataFrameData p_metadata = new MetadataFrameData();
-                        long startTills = System.currentTimeMillis();
                         SendData sendData = new SendData(source.p_ndi_name, "HH", true, true);
                         try (SendLib sendLib = new SendLib(sendData)) {
                             do {
@@ -61,36 +60,28 @@ public class ApplicationSendMain {
                                         //video
                                         System.out.println("video:------------------------------");
                                         System.out.println(p_video_data.p_data);
+                                        //send video
+                                        sendLib.sendVideoV2(p_video_data);
                                         reveiveLib.freeVideoV2(p_video_data);
                                         break;
                                     case 2:
                                         //audio
                                         System.out.println("audio:------------------------------");
                                         System.out.println(p_audio_data2.p_data);
+                                        //send audio
+                                        sendLib.sendAudioV2(p_audio_data2);
                                         reveiveLib.freeAudioV2(p_audio_data2);
                                         break;
                                     case 3:
                                         //meta data
                                         System.out.println("meta:------------------------------");
                                         System.out.println(p_metadata.p_data);
-                                        //                                        reveiveLib.freeMetadata(p_metadata);
+                                        //send meta
+                                        sendLib.sendMetadata(p_metadata);
+                                        //reveiveLib.freeMetadata(p_metadata);
                                         break;
                                     case 4:
                                         System.out.println("error");
-                                        break;
-                                }
-                                switch (receiveFrameType) {
-                                    case 1:
-                                        //video
-                                        sendLib.sendVideoV2(p_video_data);
-                                        break;
-                                    case 2:
-                                        //audio
-                                        sendLib.sendAudioV2(p_audio_data2);
-                                        break;
-                                    case 3:
-                                        //meta data
-                                        sendLib.sendMetadata(p_metadata);
                                         break;
                                 }
                                 Thread.sleep(1000);
