@@ -26,26 +26,4 @@ public class VideoFrameV2Data extends Structure {
     public int data_size_in_bytes;
     public String p_metadata;
     public long timestamp;
-
-    public VideoFrameV2Data(){
-
-    }
-//    public VideoFrameV2Data(int xres, int yres, IntByReference fourCC, int frame_rate_N, int frame_rate_D,
-//                            float picture_aspect_ratio, IntByReference frame_format_type,
-//                            long timecode, byte[] p_data, int line_stride_in_bytes,
-//                            String p_metadata, long timestamp) {
-//        this.xres = xres;
-//        this.yres = yres;
-//        FourCC = fourCC;
-//        this.frame_rate_N = frame_rate_N;
-//        this.frame_rate_D = frame_rate_D;
-//        this.picture_aspect_ratio = picture_aspect_ratio;
-//        this.frame_format_type = frame_format_type;
-//        this.timecode = timecode;
-//        this.p_data = p_data;
-//        this.line_stride_in_bytes = line_stride_in_bytes;
-//        this.data_size_in_bytes = data_size_in_bytes;
-//        this.p_metadata = p_metadata;
-//        this.timestamp = timestamp;
-//    }
 }

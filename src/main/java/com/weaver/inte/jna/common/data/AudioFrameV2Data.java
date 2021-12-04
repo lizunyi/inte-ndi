@@ -10,8 +10,8 @@ import com.sun.jna.ptr.FloatByReference;
  * @date:21/11/26 16:11
  */
 public class AudioFrameV2Data extends Structure {
-    public int sample_rate = 48000;
-    public int no_channels = 2;
+    public int sample_rate;
+    public int no_channels;
     public int no_samples;
     public long timecode;
     public FloatByReference p_data;
