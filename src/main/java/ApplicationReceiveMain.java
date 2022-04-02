@@ -17,8 +17,8 @@ import java.util.List;
 public class ApplicationReceiveMain {
 
     public static void main(String[] args) throws IOException {
-        FindData findData = new FindData(true, "HH", "");
-//        FindData findData = new FindData(true, "", "");
+//        FindData findData = new FindData(true, "HH", "");
+        FindData findData = new FindData(true, "", "");
         try (FindLib findLib = new FindLib(findData)) {
             //查找NDI源
             List<NdiSourceData> sourceDataList = findLib.findCurrentSources(5000);
@@ -32,7 +32,7 @@ public class ApplicationReceiveMain {
                     //接收NDI源数据
                     try (ReveiveLib reveiveLib = new ReveiveLib(receiveData)) {
                         reveiveLib.connect(source);
-                        System.out.println("receive ndi_ssource:");
+                        System.out.println("receive ndi_source:");
                         System.out.println(source);
                         VideoFrameV2Data p_video_data = new VideoFrameV2Data();
                         AudioFrameV2Data p_audio_data2 = new AudioFrameV2Data();
